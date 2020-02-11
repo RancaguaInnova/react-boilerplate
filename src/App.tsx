@@ -1,32 +1,41 @@
-import React, { Suspense } from 'react'
-import { Router, RouteComponentProps } from '@reach/router'
+import React, { lazy, Suspense } from 'react'
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 
 import Header from 'components/Header'
 import Loading from 'components/Loading'
 
 import './App.css'
 
-const Home = React.lazy(() => import('pages/Home'))
-const Events = React.lazy(() => import('pages/Events'))
-const News = React.lazy(() => import('pages/News'))
-const Services = React.lazy(() => import('pages/Services'))
+const Home = lazy(() => import('pages/Home'))
+const Events = lazy(() => import('pages/Events'))
+const News = lazy(() => import('pages/News'))
+const Services = lazy(() => import('pages/Services'))
 
 const App: React.FC = () => {
 	return (
+		<Router>
 		<div className='App'>
 			<Header />
 			<Suspense fallback={<Loading />}>
-				<Router>
-					<RouterPage path='/' pageComponent={<Home />} default />
-					<RouterPage path='/eventos' pageComponent={<Events />} />
-					<RouterPage path='/noticias' pageComponent={<News />} />
-					<RouterPage path='/servicios' pageComponent={<Services />} />
-				</Router>
+				 <Switch>
+					<Route path='/eventos'>
+						<Events />
+					</Route>
+					<Route path='/noticias'>
+						<News />
+					</Route>
+					<Route path='/servicios'>
+						<Services />
+					</Route>
+					<Route path='/'>
+						<Home />
+					</Route>
+				</Switch>
 			</Suspense>
 		</div>
+	</Router>
 	)
 }
 
 export default App
 
-const RouterPage = (props: { pageComponent: JSX.Element } & RouteComponentProps) => props.pageComponent
